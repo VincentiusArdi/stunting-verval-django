@@ -1,7 +1,10 @@
 from django.http import JsonResponse
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from django.views.decorators.csrf import csrf_exempt
 from asgiref.sync import async_to_sync
-from rest_framework.decorators import permission_classes
+from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import AllowAny
 import json
 from .f_newongoing_stunting_v2_bali import stunting_v3_bali
@@ -216,11 +219,24 @@ async def f_newrekap_stunting_dtl_vmp8(request):
             return JsonResponse({"error": str(e)}, status=400)
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+
+@extend_schema(
+    methods=['GET'],
+    parameters=[
+        OpenApiParameter(name='id_provinsi', required=True, type=int),
+        OpenApiParameter(name='v_bulan', required=True, type=int),
+        OpenApiParameter(name='v_tahun', required=True, type=int),
+        OpenApiParameter(name='v_nomor_keluarga', required=True, type=str),
+        OpenApiParameter(name='v_nik_tidak_wajar', required=False, type=str),
+    ],
+    responses={200: dict},
+)
+@api_view(['GET'])
 @permission_classes([AllowAny])
 @csrf_exempt
 @async_to_sync
 async def ong_stunting_dtl_regc(request):
-    if request.method == 'GET':
+        
         params = {
             'id_provinsi': request.GET.get('id_provinsi', None),
             'v_bulan': request.GET.get('v_bulan', None),
@@ -238,13 +254,14 @@ async def ong_stunting_dtl_regc(request):
                 params['id_provinsi'] = int(params['id_provinsi'])
 
             if params['id_provinsi'] in {11, 13, 14, 17}:
-                    data = await stunting_dtl_regc(params)
+                    results = await stunting_dtl_regc(params)
+                    data = [dict(row) for row in results]
                     return JsonResponse({"data": data}, safe=False)
             if params['id_provinsi'] in {12, 18}:
-                    data = await stunting_dtl_regb(params)
+                    results = await stunting_dtl_regb(params)
+                    data = [dict(row) for row in results]
                     return JsonResponse({"data": data}, safe=False)
             else:
                 return JsonResponse({"error": f"Schema tidak ditemukan untuk id_provinsi = {params['id_provinsi']}"}, status=400)
         except ValueError as e:
             return JsonResponse({"error": str(e)}, status=400)
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
