@@ -5,12 +5,38 @@ from datetime import datetime, timedelta
 from pandas.tseries.offsets import MonthEnd
 
 provinsi_map = {
-    12: "jabar",
-    18: "ntb",
-    11: "dki",
-    13: "jateng",
-    14: "diy",
-    17: "bali"
+    9: "babel",
+    16: "banten",
+    7: "bengkulu",
+    28: "gorontalo",
+    21: "kalteng",
+    23: "kaltim",
+    36: "kalut",
+    10: "kepri",
+    8: "lampung",
+    30: "maluku",
+    31: "malut",
+    33: "pabar",
+    40: "pabardaya",
+    32: "papua",
+    29: "sulbar",
+    26: "sulsel",
+    25: "sulteng",
+    27: "sultra",
+    6: "sumsel",
+    2: "sumut",
+    1: "aceh",
+    5: "jambi",
+    15: "jatim",
+    20: "kalbar",
+    22: "kalsel",
+    19: "ntt",
+    39: "papeg",
+    37: "pasel",
+    38: "pateng",
+    4: "riau",
+    24: "sulut",
+    3: "sumbar"
 }
 
 async def calculate_v_tanggal(v_tahun, v_bulan):
@@ -31,13 +57,13 @@ async def calculate_v_tanggal(v_tahun, v_bulan):
     return v_tanggal
 
 
-async def newrekap_stunting_dtl_vmp8(params):
+async def newrekap_stunting_dtl_vmp11(params):
     conn = psycopg2.connect(
         dbname="BKKBN",
         user="dev_siga",
         password="devsiga11s",
         host="103.225.242.241",
-        port="5500"
+        port="5502"
     )
 
     cursor = conn.cursor(cursor_factory=extras.DictCursor)
