@@ -40,10 +40,10 @@ async def stunting_dtl_regc(params):
 
     cursor = conn.cursor(cursor_factory=extras.DictCursor)
     
-    id_provinsi = int(params.get("id_provinsi"))
-    schema = schema_map.get(id_provinsi)
+    v_id_provinsi = int(params.get("v_id_provinsi"))
+    schema = schema_map.get(v_id_provinsi)
     if not schema:
-        raise ValueError(f"Schema tidak ditemukan untuk id_provinsi = {id_provinsi}")
+        raise ValueError(f"Schema tidak ditemukan untuk id_provinsi = {v_id_provinsi}")
 
     # v_tahun = params['v_tahun']
     # v_bulan = params['v_bulan']
