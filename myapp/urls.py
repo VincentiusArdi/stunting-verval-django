@@ -1,5 +1,9 @@
 from django.urls import path
-from .views import f_newrekap_stunting_vmp8, f_newrekap_stunting_dtl_vmp8, ong_stunting_dtl_regc, ong_stunting_v3_regc, ong_stunting_genting_allreg, ong_stunting_genting_ringkasan_allreg, f_newrekap_stunting_ringkasan_all
+from .views import (
+    f_newrekap_stunting_vmp8, f_newrekap_stunting_dtl_vmp8, 
+    ong_stunting_dtl_regc, ong_stunting_v3_regc, ong_stunting_genting_allreg, 
+    ong_stunting_genting_ringkasan_allreg, f_newrekap_stunting_ringkasan_all,
+    getDataVervalByLocationWithPagination)
 
 urlpatterns = [
     path('newrekap-stunting', f_newrekap_stunting_vmp8, name='newrekap_stunting'),
@@ -9,4 +13,5 @@ urlpatterns = [
     path('stunting-v3', ong_stunting_v3_regc, name='stunting_v3'),
     path('stunting-genting', ong_stunting_genting_allreg, name='stunting_genting_allreg'),
     path('stunting-genting-ringkasan', ong_stunting_genting_ringkasan_allreg, name='stunting_genting_ringkasan_allreg'),
+    path('getDataVervalByLocationWithPagination', getDataVervalByLocationWithPagination, name='getDataVervalByLocationWithPagination'),
 ]

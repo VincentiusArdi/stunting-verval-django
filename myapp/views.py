@@ -29,6 +29,8 @@ from .f_newongoing_stunting_genting_ringkasan_regb import stunting_genting_ringk
 from .f_newongoing_stunting_genting_ringkasan_rega import stunting_genting_ringkasan_rega
 from .f_newongoing_stunting_genting_ringkasan_regc import stunting_genting_ringkasan_regc
 from .f_newongoing_stunting_genting_ringkasan_regd import stunting_genting_ringkasan_regd
+from myapp.service import stunting_service
+from myapp.utils.request_utils import get_bool, get_int, get_str
 
 @extend_schema(
     methods=['GET'],
@@ -556,3 +558,75 @@ async def ong_stunting_genting_ringkasan_allreg(request):
                 return JsonResponse({"error": f"Schema tidak ditemukan untuk id_provinsi = {params['v_id_propinsi']}"}, status=400)
         except ValueError as e:
             return JsonResponse({"error": str(e)}, status=400)
+        
+@extend_schema(
+    methods=["GET"],
+    parameters=[
+        OpenApiParameter(name='bulan', required=True, type=int),
+        OpenApiParameter(name='tahun', required=True, type=int),
+        OpenApiParameter(name='nik', required=False, type=str),
+        OpenApiParameter(name='nama', required=False, type=str),
+        OpenApiParameter(name='idProvinsi', required=True, type=int),
+        OpenApiParameter(name='idKabupaten', required=False, type=int),
+        OpenApiParameter(name='idKecamatan', required=False, type=int),
+        OpenApiParameter(name='idKelurahan', required=False, type=int),
+        OpenApiParameter(name='idRw', required=False, type=int),
+        OpenApiParameter(name='idRt', required=False, type=str),
+        OpenApiParameter(name='balita', required=False, type=int),
+        OpenApiParameter(name='baduta', required=False, type=int),
+        OpenApiParameter(name='statusHamil', required=False, type=bool),
+        OpenApiParameter(name='statusPus', required=False, type=int),
+        OpenApiParameter(name='statusKeluarga', required=False, type=str),
+        OpenApiParameter(name='statusVerval', required=False, type=bool),
+        OpenApiParameter(name='statusKrs', required=False, type=int),
+        OpenApiParameter(name='page', required=False, type=int),
+        OpenApiParameter(name='nikTidakWajar', required=False, type=bool),
+        OpenApiParameter(name='kesejahteraanPrioritas', required=False, type=str),
+        OpenApiParameter(name='statusKrsSasaran', required=False, type=int),
+        OpenApiParameter(name='flagGenting', required=False, type=int),
+        OpenApiParameter(name='sasaranGenting', required=False, type=str),
+        OpenApiParameter(name='entryGenting', required=False, type=int),
+        OpenApiParameter(name='pengukuranBbtb', required=False, type=bool),
+        OpenApiParameter(name='statusPengukuran', required=False, type=bool),
+        OpenApiParameter(name='vervalYa', required=False, type=int),
+        OpenApiParameter(name='limit', required=False, type=int),
+    ],
+    responses={200: dict}
+)
+@api_view(['GET'])        
+@permission_classes([AllowAny])
+@csrf_exempt
+@async_to_sync
+async def getDataVervalByLocationWithPagination(request):
+    if request.method == 'GET':
+        params = {
+            'v_bulan': get_int(request, 'bulan', required=True),
+            'v_tahun': get_int(request, 'tahun', required=True),
+            'v_nik': get_str(request, 'nik'),
+            'v_nama': get_str(request, 'nama'),
+            'v_id_propinsi': get_int(request, 'idProvinsi', required=True),
+            'v_id_kabupaten': get_int(request, 'idKabupaten', required=True),
+            'v_id_kecamatan': get_int(request, 'idKecamatan', required=True),
+            'v_id_kelurahan': get_int(request, 'idKelurahan', required=True),
+            'v_id_rw': get_int(request, 'idRw'),
+            'v_id_rt': get_str(request, 'idRt'),
+            'v_balita': get_int(request, 'balita'),
+            'v_baduta': get_int(request, 'baduta'),
+            'v_status_hamil': get_bool(request, 'statusHamil'),
+            'v_status_pus': get_int(request, 'statusPus'),
+            'v_status_verval': get_bool(request, 'statusVerval'),
+            'v_status_krs': get_int(request, 'statusKrs'),
+            'v_nik_tidak_wajar': get_bool(request, 'nikTidakWajar'),
+            'v_status_keluarga': get_str(request, 'statusKeluarga'),
+            'v_kesejahteraan_prioritas': get_str(request, 'kesejahteraanPrioritas'),
+            'v_flag_genting': get_int(request, 'flagGenting'),
+            'v_sasaran_genting': get_str(request, 'sasaranGenting'),
+            'v_entry_genting': get_int(request, 'entryGenting'),
+            'v_sudah_diukur': get_bool(request, 'pengukuranBbtb'),
+            'v_status_pengukuran': get_bool(request, 'statusPengukuran'),
+            'verval_ya': get_int(request, 'vervalYa'),
+            'v_offset': get_int(request, 'page'),
+            'v_limit': get_int(request, 'limit'),
+        }
+        result, status_code = await stunting_service.StuntingService.get_stunting_data(params)
+        return JsonResponse(result, status=status_code, safe=False)
