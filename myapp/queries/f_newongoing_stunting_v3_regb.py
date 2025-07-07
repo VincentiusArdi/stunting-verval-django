@@ -101,8 +101,8 @@ async def stunting_v3_regb(params):
         select a.kki, a.nik, a.nama, a.status_pus, a.status_hamil, a.kesertaan_kb_modern, a.id_provinsi, a.id_kabupaten, a.id_kecamatan, a.id_kelurahan, a.id_rw, a.id_rt, a.sumber_air_minum, a.memiliki_tempat_bab, a.status_keluarga, a.kesejahteraan_prioritas, a.pendampingan_tpk, a.terlalu_muda, a.terlalu_tua, a.terlalu_dekat, a.terlalu_banyak, a.status_verval, a.tanggal_verval, a.bulan_rekap, a.tahun_rekap, a.nama_istri, a.balita, a.baduta, a.kondisi_fasilitas_bab, a.kondisi_sumber_air_minum, a.pus_hamil, a.resiko_stunting, a.pus_kb_modern, a.pendampingan_tpk_rujukan, a.pendampingan_tpk_bansos, a.pendampingan_tpk_kie, a.pendampingan_tpk_elsimil, a.pendampingan_tpk_eppgbm, a.pendampingan_tpk_baas, a.pendampingan_tpk_pmt, a.pendampingan_tpk_tidak_ada, a.latitude, a.longitude, a.audit_trail, a.status_draft, a.nik_istri, a.usia_kehamilan, a.keterangan, a.foto_rumah, a.foto_jamban, a.tanggal_capture, a.individu_akan_menikah, a.nik_tidak_wajar, a.flag_posyandu, a.sasaran_genting, a.dapat_bansos_genting, a.sudah_diukur, a.tanggal_kunjungan, a.status_pengukuran, a.sts_paud, a.id_frm, a.no_kk, a.jarak_sam, a.memiliki_aset, a.jns_atap, a.kondisi_atap, a.jns_dinding, a.kondisi_dinding, a.jns_lantai, a.kondisi_lantai, a.sumber_penerangan, a.daya_penerangan, a.jml_orang_tinggal, a.bahan_bakar_masak, a.kepemilikan_bangunan, a.pendampingan_tpk_genting, a.luas_rumah
 	from (
 		select distinct a.kki::text AS kki,
-	        LEFT(public.voltaccess(a.nik_kk, 'numeric'), 16)::text AS nik,
-	        LEFT(public.voltaccess(a.nama_kk, 'alphanumericv2'), 200)::text AS nama,
+	        a.nik_kk::text AS nik,
+	        a.nama_kk::text AS nama,
 	        a.status_pus,
 	        (case when a.status_hamil = true and ((extract(days from ({v_tanggal} - a.updated_date)) / 7)::int + coalesce(a.usia_kehamilan,0)::int) <= 40 then a.status_hamil else false end)::boolean as status_hamil,
 			a.kesertaan_kb_modern::text as kesertaan_kb_modern,
@@ -125,7 +125,7 @@ async def stunting_v3_regb(params):
 	        a.tanggal_verval,
 	        a.bulan_rekap,
 	        a.tahun_rekap,
-	        LEFT(public.voltaccess(a.nama_istri, 'alphanumericv2'), 200)::text as nama_istri,
+	        a.nama_istri::text as nama_istri,
 	        coalesce(case when to_char(age({v_tanggal}, a.tanggal_lahir_anak_terakhir), 'YYYY')::integer between 2 and 4 then 1 end, 2) as balita,
 	        coalesce(case when to_char(age({v_tanggal}, a.tanggal_lahir_anak_terakhir), 'YYYY')::integer < 2 then 1 end,2) as baduta,
 	        a.kondisi_fasilitas_bab,
@@ -145,7 +145,7 @@ async def stunting_v3_regb(params):
 			a.longitude,
 			a.audit_trail,
 			a.status_draft,
-			LEFT(public.voltaccess(a.nik_istri, 'numeric'), 16)::text as nik_istri,
+			a.nik_istri::text as nik_istri,
 			a.usia_kehamilan,
 			a.keterangan,
 			a.foto_rumah,

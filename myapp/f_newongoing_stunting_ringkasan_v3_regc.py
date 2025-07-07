@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from pandas.tseries.offsets import MonthEnd
 
 schema_map = {
-    17: "verval_bali",
+    17: "{schema}",
     14: "verval_diy",
     11: "verval_dki",
     13: "verval_jateng"
@@ -168,8 +168,8 @@ async def stunting_ringkasan_v3_regc(params):
 			a.sudah_diukur,
 			a.status_pengukuran,
 			a.tanggal_lahir_anak_terakhir
-		from verval_bali.stunting_head a
-	    /*left join (select * from verval_bali.stunting_genting b
+		from {schema}.stunting_head a
+	    /*left join (select * from {schema}.stunting_genting b
 		    where b.id_provinsi = {v_id_propinsi}
 		    and b.id_kabupaten = {v_id_kabupaten}
 		    and b.id_kecamatan = {v_id_kecamatan}
@@ -183,7 +183,7 @@ async def stunting_ringkasan_v3_regc(params):
 				max(case when to_char(age({v_tanggal}, b.tanggal_lahir), 'YYYY')::integer < 2 then 1 end) as baduta,
 				max(case when to_char(age({v_tanggal}, b.tanggal_lahir), 'YYYY')::integer between 2 and 4 then 1 end) as balita,
 				max(case when b.individu_baru = true then 1 end)::int as individu_baru
-	    	from verval_bali.stunting_dtl b
+	    	from {schema}.stunting_dtl b
 	    	where b.id_provinsi = {v_id_propinsi}
 		    and b.id_kabupaten = {v_id_kabupaten}
 		    and b.id_kecamatan = {v_id_kecamatan}

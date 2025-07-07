@@ -5,8 +5,10 @@ from datetime import datetime, timedelta
 from pandas.tseries.offsets import MonthEnd
 
 schema_map = {
-    12: "verval_jabar",
-    18: "verval_ntb"
+    17: "verval_bali",
+    14: "verval_diy",
+    11: "verval_dki",
+    13: "verval_jateng"
 }
 
 async def calculate_v_tanggal(v_tahun, v_bulan):
@@ -27,12 +29,12 @@ async def calculate_v_tanggal(v_tahun, v_bulan):
     return v_tanggal
 
 
-async def stunting_ringkasan_v3_regb(params):
+async def stunting_ringkasan_v3_regc(params):
     conn = psycopg2.connect(
         dbname="volt_verval2024",
         user="dev_siga",
         password="devsiga11s",
-        host="103.225.242.100",
+        host="103.225.242.99",
         port="5435"
     )
 

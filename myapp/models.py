@@ -85,3 +85,8 @@ class DataStunting (models.Model):
     kepemilikan_bangunan = models.IntegerField(null=True)
     pendampingan_tpk_genting = models.IntegerField(null=True)
     luas_rumah = models.IntegerField(null=True)
+    kondisi_fasilitas_bab = models.IntegerField(null=True)
+    kondisi_sumber_air_minum = models.IntegerField(null=True)
+    individu_akan_menikah = models.IntegerField(null=True)
+    class Meta:
+        app_label = 'myapp'
